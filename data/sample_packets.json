@@ -1,0 +1,163 @@
+{
+  "practices": [
+    {
+      "id": "demo_eye_asc",
+      "name": "Demo Eye ASC",
+      "facility_count": 3
+    },
+    {
+      "id": "demo_anesthesia",
+      "name": "Demo Anesthesia Partners",
+      "facility_count": 4
+    },
+    {
+      "id": "demo_fertility",
+      "name": "Demo Fertility Center",
+      "facility_count": 2
+    }
+  ],
+  "packets": [
+    {
+      "packet_id": "PKT-1001",
+      "practice_id": "demo_eye_asc",
+      "practice_name": "Demo Eye ASC",
+      "uploaded_at": "2026-08-10T14:02:00Z",
+      "original_vault_ref": "vault/PKT-1001_original.pdf",
+      "page_count": 6,
+      "shared_day_sheet": true,
+      "status": "ready_for_review",
+      "patients": [
+        {
+          "work_item_id": "WI-1001-A",
+          "legal_name": "Alex Rivera",
+          "dob": "1984-03-12",
+          "mrn_synthetic": "SYN-44021",
+          "dos": "2026-08-09",
+          "laterality": "Left",
+          "procedure": "Cataract extraction with IOL",
+          "cpt": "66984",
+          "asa": "",
+          "facility": "Demo Eye ASC - Main OR",
+          "clinician": "Dr. Morgan Ellis",
+          "schedule_note": "On Resource Time / Daily Billing sheet; charge present",
+          "gap_flag": false,
+          "review_status": "pending"
+        },
+        {
+          "work_item_id": "WI-1001-B",
+          "legal_name": "Jordan Lee",
+          "dob": "1977-11-02",
+          "mrn_synthetic": "SYN-44022",
+          "dos": "2026-08-09",
+          "laterality": "Right",
+          "procedure": "YAG capsulotomy",
+          "cpt": "66821",
+          "asa": "",
+          "facility": "Demo Eye ASC - Laser Suite",
+          "clinician": "Dr. Morgan Ellis",
+          "schedule_note": "On Resource Time / Daily Billing sheet; charge present",
+          "gap_flag": false,
+          "review_status": "pending"
+        },
+        {
+          "work_item_id": "WI-1001-C",
+          "legal_name": "Casey Nguyen",
+          "dob": "1990-01-22",
+          "mrn_synthetic": "SYN-44023",
+          "dos": "2026-08-09",
+          "laterality": "Left",
+          "procedure": "Intravitreal injection",
+          "cpt": "67028",
+          "asa": "",
+          "facility": "Demo Eye ASC - Clinic",
+          "clinician": "Dr. Riley Chen",
+          "schedule_note": "On schedule; no charge page in packet (schedule gap)",
+          "gap_flag": true,
+          "review_status": "pending"
+        }
+      ]
+    },
+    {
+      "packet_id": "PKT-1002",
+      "practice_id": "demo_anesthesia",
+      "practice_name": "Demo Anesthesia Partners",
+      "uploaded_at": "2026-08-11T09:20:00Z",
+      "original_vault_ref": "vault/PKT-1002_original.pdf",
+      "page_count": 4,
+      "shared_day_sheet": true,
+      "status": "ready_for_review",
+      "patients": [
+        {
+          "work_item_id": "WI-1002-A",
+          "legal_name": "Sam Patel",
+          "dob": "1991-06-18",
+          "mrn_synthetic": "SYN-55101",
+          "dos": "2026-08-10",
+          "laterality": "N/A",
+          "procedure": "Anesthesia for intraperitoneal procedures",
+          "cpt": "00840",
+          "asa": "ASA II",
+          "facility": "Demo Surgicenter North",
+          "clinician": "CRNA Avery Brooks",
+          "schedule_note": "On Resource Time; charge present",
+          "gap_flag": false,
+          "review_status": "pending"
+        },
+        {
+          "work_item_id": "WI-1002-B",
+          "legal_name": "Taylor Kim",
+          "dob": "1968-09-04",
+          "mrn_synthetic": "SYN-55102",
+          "dos": "2026-08-10",
+          "laterality": "N/A",
+          "procedure": "Anesthesia for lower intestine endoscopic procedures",
+          "cpt": "00810",
+          "asa": "ASA III",
+          "facility": "Demo Surgicenter North",
+          "clinician": "CRNA Avery Brooks",
+          "schedule_note": "On Resource Time; charge present",
+          "gap_flag": false,
+          "review_status": "pending"
+        }
+      ]
+    },
+    {
+      "packet_id": "PKT-1003",
+      "practice_id": "demo_fertility",
+      "practice_name": "Demo Fertility Center",
+      "uploaded_at": "2026-08-11T11:05:00Z",
+      "original_vault_ref": "vault/PKT-1003_original.pdf",
+      "page_count": 3,
+      "shared_day_sheet": false,
+      "status": "ready_for_review",
+      "patients": [
+        {
+          "work_item_id": "WI-1003-A",
+          "legal_name": "Jamie Ortega",
+          "dob": "1988-12-01",
+          "mrn_synthetic": "SYN-66011",
+          "dos": "2026-08-11",
+          "laterality": "N/A",
+          "procedure": "Oocyte retrieval",
+          "cpt": "58970",
+          "asa": "ASA I",
+          "facility": "Demo Fertility - Procedure Suite",
+          "clinician": "Dr. Quinn Hayes",
+          "schedule_note": "Charge present; identity/DOB verified against packet",
+          "gap_flag": false,
+          "review_status": "pending"
+        }
+      ]
+    }
+  ],
+  "office_notes": [
+    {
+      "id": "NOTE-1",
+      "packet_id": "PKT-1001",
+      "patient": "Casey Nguyen",
+      "kind": "schedule_gap",
+      "message": "Patient on Resource Time / Daily Billing for DOS 2026-08-09, but no charge page found in uploaded packet. Keep gap visible for Office until missing doc arrives.",
+      "status": "open"
+    }
+  ]
+}

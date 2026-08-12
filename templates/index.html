@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ClearBilling Command Center Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #2a3138;
+      --muted: #5c6770;
+      --accent: #1b4f5c;
+      --accent-soft: #e8eef0;
+      --paper: #f7f8fa;
+      --panel: #ffffff;
+      --line: #d5dde6;
+      --ok: #1f6b4a;
+      --warn: #8a5a00;
+      --danger: #9b2c2c;
+      --draft: #b45309;
+      --grid: rgba(27, 79, 92, 0.055);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      background-color: #e8ecef;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .masthead {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(8px);
+      background: rgba(247, 248, 250, 0.88);
+      border-bottom: 1px solid #cfd8dd;
+      padding: 0.75rem 1.25rem 0;
+    }
+    .mast-top {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;
+    }
+    .brand { display: flex; flex-direction: column; gap: 0.1rem; }
+    .brand .prod { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .brand h1 { font-size: 1.35rem; color: var(--accent); letter-spacing: -0.02em; }
+    .brand .tag { font-size: 0.82rem; color: var(--muted); }
+    .right-meta { text-align: right; font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .badge {
+      display: inline-block; margin-top: 0.35rem;
+      background: #fff6d8; color: #6a4b00; border: 1px solid #e6d08a;
+      border-radius: 4px; padding: 0.12rem 0.45rem; font-size: 0.72rem; font-weight: 700;
+    }
+    .tabs {
+      max-width: 1200px; margin: 0.7rem auto 0;
+      display: flex; gap: 0.2rem; flex-wrap: wrap;
+    }
+    .tab {
+      border: 0; background: transparent; cursor: pointer;
+      padding: 0.55rem 0.9rem; font: inherit; font-weight: 600; font-size: 0.88rem;
+      color: var(--muted); border-bottom: 2px solid transparent;
+    }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab .pill {
+      display: inline-block; min-width: 1.15rem; text-align: center;
+      margin-left: 0.3rem; font-size: 0.7rem; padding: 0.05rem 0.35rem;
+      border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700;
+    }
+    .tab .pill.warn { background: #ffe8c7; color: var(--warn); }
+    .tab .pill.danger { background: #fde2e2; color: var(--danger); }
+    main { max-width: 1200px; margin: 0 auto; padding: 1rem 1.25rem 2.5rem; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid #d7dee3;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(30, 50, 60, 0.05);
+      padding: 1rem 1.1rem;
+    }
+    .hidden { display: none !important; }
+    .flow {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.45rem; margin-bottom: 1rem;
+    }
+    .step {
+      background: var(--paper); border: 1px solid #d7dee3; border-radius: 8px;
+      padding: 0.55rem 0.6rem; font-size: 0.78rem; color: var(--muted);
+    }
+    .step strong { display: block; color: var(--accent); margin-bottom: 0.15rem; font-size: 0.8rem; }
+    .toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.9rem; }
+    button, .btn {
+      border: 0; background: var(--accent); color: #fff; border-radius: 6px;
+      padding: 0.42rem 0.7rem; cursor: pointer; font: inherit; font-weight: 600; font-size: 0.82rem;
+    }
+    button.secondary, .btn.secondary { background: #4d6575; }
+    button.ghost, .btn.ghost { background: var(--accent-soft); color: var(--accent); }
+    button.danger, .btn.danger { background: #9b2c2c; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    h2 {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.7rem;
+    }
+    .packet {
+      border: 1px solid #d7dee3; border-radius: 9px; background: var(--paper);
+      padding: 0.8rem; margin-bottom: 0.8rem;
+    }
+    .packet-head {
+      display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+      margin-bottom: 0.55rem;
+    }
+    .packet-head h3 { font-size: 0.98rem; }
+    .meta { color: var(--muted); font-size: 0.8rem; }
+    .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .chip {
+      font-size: 0.72rem; font-weight: 700; padding: 0.12rem 0.4rem; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .chip.warn { background: #ffe8c7; color: var(--warn); }
+    .chip.ok { background: #e5f6ee; color: var(--ok); }
+    .row {
+      display: grid; grid-template-columns: 1.4fr 1fr auto; gap: 0.7rem;
+      align-items: start; padding: 0.65rem 0; border-top: 1px solid #e3e9ed;
+    }
+    .name { font-weight: 700; }
+    .tiny { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; line-height: 1.4; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
+    .fields label { display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+    .fields input {
+      border: 1px solid #cfd8dd; border-radius: 5px; padding: 0.28rem 0.4rem;
+      font: inherit; font-size: 0.8rem; color: var(--ink); background: #fff;
+    }
+    .actions { display: flex; flex-direction: column; gap: 0.3rem; min-width: 9.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    th, td { text-align: left; padding: 0.42rem 0.3rem; border-bottom: 1px solid #e7eef2; vertical-align: top; }
+    th { color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .event { font-size: 0.82rem; padding: 0.4rem 0; border-bottom: 1px solid #eef3f6; }
+    .event .at { color: var(--muted); font-size: 0.72rem; }
+    .note {
+      border-left: 3px solid var(--warn); background: #fff9ef; padding: 0.65rem 0.75rem;
+      border-radius: 0 8px 8px 0; margin-bottom: 0.55rem;
+    }
+    .note.resolved { border-left-color: var(--ok); background: #f1faf5; opacity: 0.85; }
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55rem; margin-bottom: 0.9rem;
+    }
+    .stat {
+      background: var(--paper); border: 1px solid #d7dee3; border-radius: 8px; padding: 0.65rem 0.75rem;
+    }
+    .stat .n { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+    .stat .l { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+    .vault-card {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.75rem;
+      border: 1px solid #d7dee3; border-radius: 9px; padding: 0.8rem; margin-bottom: 0.65rem;
+      background: var(--paper);
+    }
+    .changelog li { margin: 0.35rem 0 0.35rem 1rem; font-size: 0.86rem; color: var(--muted); }
+    .prop-note {
+      max-width: 1200px; margin: 0.85rem auto 0;
+      background: #eef4f6; border: 1px solid #c5d4da; border-radius: 8px;
+      padding: 0.7rem 0.9rem; font-size: 0.8rem; color: var(--muted); line-height: 1.45;
+    }
+    .prop-note strong { color: var(--accent); }
+    @media (max-width: 980px) {
+      .flow { grid-template-columns: 1fr 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .vault-card { grid-template-columns: 1fr; }
+      .actions { flex-direction: row; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="mast-top">
+      <div class="brand">
+        <div class="prod">ClearBilling</div>
+        <h1>Command Center</h1>
+        <div class="tag">Workflow sandbox of the live charge-operations system</div>
+        <div class="badge">SYNTHETIC DATA ONLY · no real PHI</div>
+      </div>
+      <div class="right-meta">
+        Demo v{{ semver }} · same ops loop as production<br />
+        Vault · Code Review · Archive · Office · Audit<br />
+        <button class="ghost" style="margin-top:0.4rem" onclick="resetDemo()">Reset demo</button>
+      </div>
+    </div>
+    <div class="prop-note">
+      <strong>Not the production UI.</strong>
+      Live Command Center chrome, PDF OCR, vault image cache, vendor integrations, and operator tooling stay private for proprietary protection.
+      This demo teaches the same review → interface → fail-safe sync loop with synthetic data only.
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="vault" onclick="showTab('vault')">Vault <span class="pill">{{ counts.packet_count }}</span></button>
+      <button class="tab" data-tab="review" onclick="showTab('review')">Code Review <span class="pill warn">{{ counts.pending_reviews }}</span></button>
+      <button class="tab" data-tab="archive" onclick="showTab('archive')">Archive <span class="pill">{{ counts.archive_count }}</span></button>
+      <button class="tab" data-tab="office" onclick="showTab('office')">Office <span class="pill {% if counts.open_office_notes %}danger{% endif %}">{{ counts.open_office_notes }}</span></button>
+      <button class="tab" data-tab="audit" onclick="showTab('audit')">Audit</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="flow">
+      <div class="step"><strong>1. Intake</strong>Practice-tagged multi-patient PDF</div>
+      <div class="step"><strong>2. Vault</strong>Immutable original retained</div>
+      <div class="step"><strong>3. Parse</strong>OCR → structured JSON work items</div>
+      <div class="step"><strong>4. Code Review</strong>Medical coding + operator signoff</div>
+      <div class="step"><strong>5. Interface</strong>SOAP CreatePatient / CreateEncounter</div>
+      <div class="step"><strong>6. Sync</strong>Approved only if PM/EHR confirms</div>
+    </section>
+
+    <section id="tab-vault" class="panel">
+      <h2>Vault overview</h2>
+      <div class="stats">
+        <div class="stat"><div class="n">{{ counts.practice_count }}</div><div class="l">Practices</div></div>
+        <div class="stat"><div class="n">{{ counts.packet_count }}</div><div class="l">Packets vaulted</div></div>
+        <div class="stat"><div class="n">{{ counts.pending_reviews }}</div><div class="l">Pending review</div></div>
+        <div class="stat"><div class="n">{{ counts.schedule_gaps }}</div><div class="l">Schedule gaps</div></div>
+      </div>
+      {% for packet in packets %}
+      <div class="vault-card">
+        <div>
+          <strong>{{ packet.packet_id }}</strong> · {{ packet.practice_name }}
+          <div class="tiny">
+            Uploaded {{ packet.uploaded_at }} · {{ packet.page_count }} pages<br />
+            Vault ref: {{ packet.original_vault_ref }}
+          </div>
+          <div class="chips" style="margin-top:0.4rem">
+            <span class="chip">{{ packet.patients|length }} patients</span>
+            {% if packet.shared_day_sheet %}<span class="chip">Shared day sheet attached</span>{% endif %}
+            <span class="chip">{{ packet.status }}</span>
+          </div>
+        </div>
+        <div class="tiny">
+          Original stays in vault. Per-patient derived packets are built for review/archive.
+          Shared Resource Time / Daily Billing sheets stay on the batch (not a charge patient).
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <section id="tab-review" class="panel hidden">
+      <h2>Code Review queue</h2>
+      <p class="tiny" style="margin-bottom:0.75rem">
+        Medical coding review (CPT / ASA, laterality, identity/DOB, schedule gaps), not software PR review.
+        Operator signoff is required before any SOAP write.
+      </p>
+      {% for packet in packets %}
+      <div class="packet">
+        <div class="packet-head">
+          <div>
+            <h3>{{ packet.packet_id }} · {{ packet.practice_name }}</h3>
+            <div class="meta">Vault {{ packet.original_vault_ref }} · {{ packet.page_count }} pages</div>
+          </div>
+          <div class="chips">
+            {% if packet.shared_day_sheet %}<span class="chip">Shared day sheet</span>{% endif %}
+            <span class="chip">{{ packet.patients|length }} work items</span>
+          </div>
+        </div>
+        {% for p in packet.patients %}
+        <div class="row" data-wi="{{ p.work_item_id }}">
+          <div>
+            <div class="name">
+              {{ p.legal_name }}
+              {% if p.gap_flag %}<span class="chip warn">schedule gap</span>{% endif %}
+              {% if p.review_status == 'pending' %}<span class="chip warn">pending</span>
+              {% elif p.review_status == 'held' %}<span class="chip warn">held</span>
+              {% else %}<span class="chip ok">{{ p.review_status }}</span>{% endif %}
+            </div>
+            <div class="tiny">
+              DOB {{ p.dob }} · DOS {{ p.dos }} · {{ p.facility }} · {{ p.clinician }}<br />
+              {{ p.schedule_note }}
+              {% if p.remote_status %}<br />Remote: {{ p.remote_status }} · Mirrored: {{ p.mirrored_status }} · {{ p.interface_id }}{% endif %}
+            </div>
+          </div>
+          <div class="fields">
+            <label>CPT <input id="cpt-{{ p.work_item_id }}" value="{{ p.cpt }}" {% if p.review_status != 'pending' %}disabled{% endif %} /></label>
+            <label>ASA <input id="asa-{{ p.work_item_id }}" value="{{ p.asa }}" {% if p.review_status != 'pending' %}disabled{% endif %} /></label>
+            <label>Laterality <input id="lat-{{ p.work_item_id }}" value="{{ p.laterality }}" {% if p.review_status != 'pending' %}disabled{% endif %} /></label>
+            <label>DOB <input id="dob-{{ p.work_item_id }}" value="{{ p.dob }}" {% if p.review_status != 'pending' %}disabled{% endif %} /></label>
+          </div>
+          <div class="actions">
+            <button onclick="approve('{{ p.work_item_id }}')" {% if p.review_status != 'pending' or p.gap_flag %}disabled{% endif %}>Sign off + post</button>
+            <button class="secondary" onclick="markRemoteApproved('{{ p.work_item_id }}')" {% if p.review_status == 'pending' or p.review_status == 'held' %}disabled{% endif %}>Simulate PM Approved</button>
+            <button class="ghost" onclick="holdItem('{{ p.work_item_id }}')" {% if p.review_status != 'pending' %}disabled{% endif %}>Hold for Office</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </section>
+
+    <section id="tab-archive" class="panel hidden">
+      <h2>Archive</h2>
+      {% if archive %}
+      <table>
+        <thead>
+          <tr>
+            <th>Work item</th><th>Patient</th><th>Practice</th><th>CPT / ASA</th><th>Remote</th><th>Mirrored</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in archive %}
+          <tr>
+            <td>{{ row.work_item_id }}</td>
+            <td>{{ row.legal_name }}</td>
+            <td>{{ row.practice_name }}</td>
+            <td>{{ row.cpt }}{% if row.asa %} / {{ row.asa }}{% endif %}</td>
+            <td>{{ row.remote_status }}</td>
+            <td>{{ row.mirrored_status }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <p class="tiny" style="margin-top:0.7rem">Shared day sheets remain on the vaulted original; Archive rows are patient charge outcomes only.</p>
+      {% else %}
+      <p class="tiny">No signed-off work items yet. Approve from Code Review to populate Archive.</p>
+      {% endif %}
+    </section>
+
+    <section id="tab-office" class="panel hidden">
+      <h2>Office notes</h2>
+      <p class="tiny" style="margin-bottom:0.75rem">
+        Schedule gaps and holds surface here. Real Command Center keeps true gaps visible until a charge exists; demo resolve clears the gap flag so you can finish the loop.
+      </p>
+      {% for note in office_notes %}
+      <div class="note {% if note.status == 'resolved' %}resolved{% endif %}">
+        <strong>{{ note.kind }}</strong> · {{ note.patient }} · {{ note.packet_id }}
+        <div class="tiny">{{ note.message }}</div>
+        {% if note.status == 'open' %}
+        <button style="margin-top:0.45rem" class="secondary" onclick="resolveNote('{{ note.id }}')">Mark resolved</button>
+        {% else %}
+        <div class="chip ok" style="margin-top:0.4rem">resolved</div>
+        {% endif %}
+      </div>
+      {% else %}
+      <p class="tiny">No Office notes.</p>
+      {% endfor %}
+    </section>
+
+    <section id="tab-audit" class="panel hidden">
+      <h2>Audit · interface + events</h2>
+      <div class="toolbar">
+        <a class="btn ghost" href="/api/health" target="_blank" rel="noreferrer">/api/health</a>
+        <a class="btn ghost" href="/api/state" target="_blank" rel="noreferrer">/api/state</a>
+      </div>
+      <h2>Interface call log</h2>
+      {% for c in call_log %}
+      <div class="event"><div class="at">{{ c.at }}</div>{{ c.method }} · {{ c.work_item_id }} → {{ c.result }}</div>
+      {% else %}
+      <p class="tiny">No interface calls yet.</p>
+      {% endfor %}
+
+      <h2 style="margin-top:1rem">Events</h2>
+      {% for e in events %}
+      <div class="event"><div class="at">{{ e.at }} · {{ e.kind }}</div>{{ e.message }}</div>
+      {% endfor %}
+
+      {% if incidents %}
+      <h2 style="margin-top:1rem">Incidents</h2>
+      {% for i in incidents %}
+      <div class="event"><div class="at">{{ i.at }} · {{ i.tier }}</div>{{ i.severity }}: {{ i.detail }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <h2 style="margin-top:1rem">Demo changelog · v{{ semver }}</h2>
+      <ul class="changelog">
+        <li>v1.4.0 - Clear proprietary-protection notice: this is a workflow sandbox, not live UI chrome.</li>
+        <li>Operator &amp; analyst guide with screenshots: docs/OPERATOR_GUIDE.md</li>
+        <li>Same ops surfaces as live Command Center: Vault / Code Review / Archive / Office / Audit.</li>
+        <li>Medical coding fields editable before signoff (CPT, ASA, laterality, DOB).</li>
+        <li>CreatePatient + CreateEncounter SOAP path; Draft→Approved fail-safe sync.</li>
+        <li>Shared day sheet + schedule-gap Office notes; gap blocks approve until resolved.</li>
+        <li>Synthetic multi-practice packets only. Not production PHI.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    function showTab(name) {
+      ['vault','review','archive','office','audit'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('hidden', t !== name);
+      });
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === name);
+      });
+      try { localStorage.setItem('cc_demo_tab', name); } catch (e) {}
+    }
+    try {
+      const saved = localStorage.getItem('cc_demo_tab');
+      if (saved) showTab(saved);
+    } catch (e) {}
+
+    function fieldBag(id) {
+      return {
+        cpt: document.getElementById('cpt-' + id).value,
+        asa: document.getElementById('asa-' + id).value,
+        laterality: document.getElementById('lat-' + id).value,
+        dob: document.getElementById('dob-' + id).value,
+      };
+    }
+
+    async function approve(id) {
+      const res = await fetch('/api/review/' + id + '/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fieldBag(id)),
+      });
+      const data = await res.json();
+      if (!data.ok) { alert(data.error || 'Approve failed'); return; }
+      location.reload();
+    }
+    async function markRemoteApproved(id) {
+      const res = await fetch('/api/review/' + id + '/mark-remote-approved', { method: 'POST' });
+      const data = await res.json();
+      if (!data.ok) { alert(data.error || 'Sync failed'); return; }
+      location.reload();
+    }
+    async function holdItem(id) {
+      const reason = prompt('Hold reason for Office', 'Need missing charge page / coding clarification') || '';
+      const res = await fetch('/api/review/' + id + '/hold', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason }),
+      });
+      const data = await res.json();
+      if (!data.ok) { alert(data.error || 'Hold failed'); return; }
+      location.reload();
+    }
+    async function resolveNote(id) {
+      const res = await fetch('/api/office/' + id + '/resolve', { method: 'POST' });
+      const data = await res.json();
+      if (!data.ok) { alert(data.error || 'Resolve failed'); return; }
+      location.reload();
+    }
+    async function resetDemo() {
+      await fetch('/api/reset', { method: 'POST' });
+      location.reload();
+    }
+  </script>
+</body>
+</html>
