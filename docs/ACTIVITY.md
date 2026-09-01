@@ -10,3 +10,4 @@ Light touch updates so the public demo stays marked current.
 - 2026-08-29 - Daily activity stamp (Command Center demo).
 - 2026-08-30 - Daily activity stamp (Command Center demo).
 - 2026-08-31 - Daily activity stamp (Command Center demo).
+- 2026-09-01 - Daily activity stamp (Command Center demo).
