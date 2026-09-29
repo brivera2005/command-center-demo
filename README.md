@@ -1,12 +1,32 @@
 # ClearBilling Command Center Demo
 
-**Workflow sandbox** of ClearBilling **Command Center**, the live clinical charge-operations application I design, maintain, test, train on, and support.
+**Workflow sandbox** of ClearBilling **Command Center**, the live clinical charge-operations application I design, build, and run as Director of Technical Operations at Clear Billing Services, Inc.
 
 > **Synthetic data only.** No real patient PHI, credentials, or production secrets.  
-> **Not the production UI.** Live chrome, PDF OCR, vault image cache, vendor integrations, and operator tooling are withheld for proprietary protection. This repo proves the **same operational loop** interviewers can run locally.
+> **Not the production UI.** Live chrome, PDF OCR, vault image cache, vendor integrations, and operator tooling are withheld for proprietary protection. This repo proves the **same operational loop** hiring managers can run locally.
 
 **Author:** Benjamin M. Rivera  
-**Links:** [LinkedIn](https://linkedin.com/in/brivera2005) · [GitHub](https://github.com/brivera2005) · [Healthcare index](https://github.com/brivera2005/healthcare-portfolio)
+**Role:** Director of Technical Operations, Clear Billing Services, Inc.  
+**Links:** [LinkedIn](https://linkedin.com/in/brivera2005) · [GitHub](https://github.com/brivera2005) · [Portfolio index](https://github.com/brivera2005/healthcare-portfolio) · [Prism intake demo](https://github.com/brivera2005/clinician-mobile-intake)
+
+---
+
+## Why this matters for technical systems / healthcare payments roles
+
+Command Center is not a slide deck. It is the **single pane of glass** our billing operators use every day to move anesthesia charge packets from upload to coded signoff to PM/EHR writeback, with HIPAA-minded controls and fail-safe sync.
+
+The same skills map cleanly onto healthcare payment platforms (hosted portals, P2PE transitions, enterprise onboarding, internal ops tooling):
+
+| What I ship in Command Center | Transferable systems skill |
+|:--|:--|
+| Vault → Code Review → Interface → Archive loop | End-to-end workflow design under compliance pressure |
+| Human signoff before any PM/EHR write | Change control; no silent money movement |
+| Fail-safe Draft → Approved only after confirmation | Idempotent integrations; never trust a half-success |
+| Schedule-gap / Office holds | Exception queues with clear ownership |
+| Multi-practice walls + operator overrides | Tenant isolation + role-based truth |
+| AI-assisted build / ops (Cursor) | Fast, reliable internal tooling without sacrificing review |
+
+Longer narrative for interviews: [docs/FOR_TECHNICAL_SYSTEMS_ROLES.md](docs/FOR_TECHNICAL_SYSTEMS_ROLES.md)
 
 ---
 
@@ -100,6 +120,17 @@ Details: [docs/OPERATOR_GUIDE.md](docs/OPERATOR_GUIDE.md) · [docs/ARCHITECTURE.
 
 ---
 
+## Upstream: Prism clinician intake
+
+Secure provider handoff (Add Case + PDF upload) lives in a separate demo:
+
+**https://github.com/brivera2005/clinician-mobile-intake**  
+Live Pages: **https://brivera2005.github.io/clinician-mobile-intake/**
+
+Command Center is the operator desk after intake. Prism is the clinician-facing front door.
+
+---
+
 ## Tests
 
 ```bash
@@ -115,7 +146,7 @@ Covers payload validation, approval gate, and fail-safe sync behavior.
 - This is a **workflow demo** of production Command Center at ClearBilling Services, not a visual clone.
 - It is **not** the production deployment and contains no live PHI.
 - Interface calls hit an in-process mock PM/EHR API, not a vendor sandbox.
-- Built to show systems-analyst work: specs, medical coding gates, interface testing, signoff, HIPAA-minded controls, and production defect handling.
+- Built to show systems work: specs, coding gates, interface testing, signoff, HIPAA-minded controls, and production defect handling.
 
 ---
 
